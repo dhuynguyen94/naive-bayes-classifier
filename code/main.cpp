@@ -6,6 +6,7 @@
 #include <string>
 #include <climits>
 #include <cmath>
+#include <string.h>
 
 using namespace std;
 
@@ -16,7 +17,27 @@ int alpha = 20; //smoothening factor
 float prior = 0.5f;
 int predicted_class[25000];
 int actual_class[25000];
-
+vector <string> stopwords {'a','about','above','after','again','against','all','am','an','and'
+							,'any','are','aren\'t','as','at','be','because','been','before'
+							,'being','below','between','both','but','by','can\'t','cannot'
+							,'could','couldn\'t','did','didn\'t','do','does','doesn\'t'
+							,'doing','don\'t','down','during','each','few','for','from'
+							,'further','had','hadn\'t','has','hasn\'t','have','haven\'t'
+							,'having','he','he\'d','he\'ll','he\'s','her','here','here\'s'
+							,'hers','herself','him','himself','his','how','how\'s','i','i\'d'
+							,'i\'ll','i\'m','i\'ve','if','in','into','is','isn\'t','it','it\'s'
+							,'its','itself','let\'s','me','more','most','mustn\'t','my','myself'
+							,'no','nor','not','of','off','on','once','only','or','other','ought'
+							,'our','ours','ourselves','out','over','own','same','shan\'t','she'
+							,'she\'d','she\'ll','she\'s','should','shouldn\'t','so','some','such'
+							,'than','that','that\'s','the','their','theirs','them','themselves'
+							,'then','there','there\'s','these','they','they\'d','they\'ll'
+							,'they\'re','they\'ve','this','those','through','to','too','under'
+							,'until','u','very','was','wasn\'t','we','we\'d','we\'ll','we\'re'
+							,'we\'ve','were','weren\'t','what','what\'s','when','when\'s'
+							,'where','where\'s','which','while','who','who\'s','whom','why'
+							,'why\'s','with','won\'t','would','wouldn\'t','you','you\'d'
+							,'you\'ll','you\'re','you\'ve','your','yours','yourself','yourselves'};
 void initialization()
 {
 	// initializing train_vocab_count array to zero
@@ -162,7 +183,16 @@ void generatePredictions()
 			int delim = occurence.find(delimiter);
 			int token = stoi(occurence.substr(0, delim));
 			int count = stoi(occurence.substr(delim+1, occurence.length()));
-			word.push_back(make_pair(token, count));
+			int flag=0;
+			for(int i=0;i<stopwords.size();i++){
+				if(strcmp(stringattoken,stopwords[i])==0){
+					flag=1;
+					break;
+				}
+			}
+			if(flag==0){
+				word.push_back(make_pair(token, count));
+			}
 		}
 	}
 	printActualClasses();
